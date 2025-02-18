@@ -1,32 +1,55 @@
-name: Automatic Tagging
+# This is a workflow to watch for a merged PR with a specific
+# Tag used to denote a version bump to a new `Y` version.  Once found,
+# it will create a Tag and then Release based on that tag.name: Automatic Tagging
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push request events but only for the "main" branch
-  push:
+  pull_request:
+    types: [merged]
     branches: [ "main" ]
 
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+# Allows you to run this workflow manually from the Actions tab
+workflow_dispatch:
 
 # A workflow run to find and do the tagging.
 jobs:
-  tag: 
+  create-tag: 
     runs-on: ubuntu-latest
     steps: 
-      -uses: actions/checkout@v2
+      -uses: actions/checkout@v3
+
+      - name: Watch for version file change from a pull, or a direct push
+        id: get_version
+        run: |
+          version_file_location="VERSION"
+            if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+              changed_files=$(git diff --name-only -r HEAD^1 HEAD)
+            else
+              changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})
+            fi
+            for file in $changed_files; do
+              if [[ $file == *"$version_file_location"* ]]; then
+                current_version=$(cat VERSION)
+              fi
+            done
+    
+                
       -name: Create the Tag
       run: |
         git config --label user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git tag -a "v${{ github.run_number }}" -m "v${{ github.run_number }}"
-        git push origin "v${{ github.run_number }}
+        git tag -a "v${{ steps.get_version.outputs.current_version }}" -m "v${{ steps.get_version.outputs.current_version }}"
+        git push origin "v${{ steps.get_version.outputs.current_version }}
+        
       -name: Create the Release
       uses: actions/create-release@v1
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 'v${{ github.run_number }}'
-          release_name: 'v${{ github.run_number }}'
-          body: 'Description of the changes in this release'
+          tag_name: 'v${{ steps.get_version.outputs.current_version }}'
+          release_name: 'v${{ steps.get_version.outputs.current_version }}'
+          body: 'Changelog for v${{ steps.get_version.outputs.current_version }}'
+          draft: false
+          prerelease: false
