@@ -1,7 +1,3 @@
-# This is a workflow to watch for a merged PR with a specific
-# Tag used to denote a version bump to a new `Y` version.  Once found,
-# it will create a Tag and then Release based on that tag.
-
 name: Automatic Tagging
 
 # Controls when the workflow will run
