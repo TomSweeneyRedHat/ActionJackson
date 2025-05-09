@@ -4,6 +4,7 @@
 
 name: Auto Tag on Version Bump
 # Allows you to run this workflow manually from the Actions tab
+on:
 workflow_dispatch:
   
 # Controls when the workflow will run
