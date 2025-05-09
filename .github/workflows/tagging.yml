@@ -2,6 +2,8 @@
 # Tag used to denote a version bump to a new `Y` version.  Once found,
 # it will create a Tag and then Release based on that tag.name: Automatic Tagging
 
+name: Auto Tag on Version Bump
+
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push request events but only for the "main" branch
@@ -15,7 +17,7 @@ on:
 
   # A workflow run to find and do the tagging.
   jobs:
-    create-tag: 
+    tag: 
       runs-on: "ubuntu-latest"
     
       steps: 
