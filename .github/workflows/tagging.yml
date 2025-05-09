@@ -16,7 +16,7 @@ workflow_dispatch:
 # A workflow run to find and do the tagging.
 jobs:
   create-tag: 
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     
     steps: 
       -uses: actions/checkout@v3
