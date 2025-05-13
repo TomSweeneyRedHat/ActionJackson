@@ -18,22 +18,13 @@ permissions:
   contents: write
 
 env:
-  VERSION_FILE_LOCATION: "VERSION"
+  VERSION_FILE_LOCATION: "./VERSION"
 
 # A workflow run to find and do the tagging.
 jobs:
   create-tag: 
     runs-on: ubuntu-latest
     steps: 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Read file contents
-        id: read_file
-        uses: satya-500/read-file-github-action@v1
-        with:
-          path: env.VERSION_FILE_LOCATION
-
       - uses: actions/checkout@v3
       - name: Watch for version file change from a pull, or a direct push
         id: get_version
@@ -45,7 +36,7 @@ jobs:
             fi
             for file in $changed_files; do
               if [[ $file == env.VERSION_FILE_LOCATION ]]; then
-                current_version= echo ${ steps.read_file.outputs.contents } >> $GITHUB_OUTPUT
+                current_version= `cat ${ env.VERSION_FILE_LOCATION }` >> $GITHUB_OUTPUT
               fi
             done
             echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: $current_version"
