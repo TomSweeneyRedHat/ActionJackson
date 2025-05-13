@@ -1,4 +1,4 @@
-# This is a workflow to watch for a merged PR with a specific
+h# This is a workflow to watch for a merged PR with a specific
 # Tag used to denote a version bump to a new `Y` version.  Once found,
 # it will create a Tag and then a Release based on that tag.name: Automatic Tagging
 
@@ -41,7 +41,7 @@ jobs:
             fi
             for file in $changed_files; do
               if [[ $file == env.VERSION_FILE_LOCATION ]]; then
-                current_version=${{ steps.version_value.outputs.version }} >> $GITHUB_OUTPUT
+                echo "current_version=${{ steps.version_value.outputs.version }}" >> $GITHUB_OUTPUT
               fi
             done
             echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: ${{ steps.get_version.outputs.current_version }} NewVal ${{ steps.version_value.outputs.version }}"
