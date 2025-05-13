@@ -15,7 +15,7 @@ on:
 
 # Set the permission for this workflow
 permissions:
-contents: write
+  contents: write
 
 # A workflow run to find and do the tagging.
 jobs:
