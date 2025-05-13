@@ -26,6 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v3
+      - name: Get version
+        id: version_value
+        run: echo "version=$(cat ${{ env.VERSION_FILE_LOCATION }})" >> $GITHUB_OUTPUT
+        
       - name: Watch for version file change from a pull, or a direct push
         id: get_version
         run: |
@@ -39,7 +43,7 @@ jobs:
                 current_version= `cat ${ env.VERSION_FILE_LOCATION }` >> $GITHUB_OUTPUT
               fi
             done
-            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: $current_version"
+            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: $current_version NewVal ${{ steps.version_value.outputs.current_version }}"
     
       - name: Create the Tag
         run: |
