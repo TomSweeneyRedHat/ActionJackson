@@ -13,6 +13,10 @@ on:
     types: [merged]
     branches: [ "main" ]
 
+# Set the permission for this workflow
+permissions:
+contents: write
+
 # A workflow run to find and do the tagging.
 jobs:
   create-tag: 
