@@ -38,6 +38,7 @@ jobs:
                 current_version=$(cat VERSION) >> $GITHUB_OUTPUT
               fi
             done
+            echo "File location $version_file_location Value: $current_version"
       - name: Create the Tag
         run: |
           git config --local user.email "action@github.com"
