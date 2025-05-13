@@ -41,7 +41,7 @@ jobs:
                 current_version=$(cat VERSION) >> $GITHUB_OUTPUT
               fi
             done
-            echo "File location " env.VERSION_FILE_LOCATION " Value: $current_version"
+            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: $current_version"
       - name: Create the Tag
         run: |
           git config --local user.email "action@github.com"
