@@ -44,11 +44,11 @@ jobs:
                 current_version=${{ steps.version_value.outputs.version }} >> $GITHUB_OUTPUT
               fi
             done
-            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: $current_version NewVal ${{ steps.version_value.outputs.version }}"
+            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: ${{ steps.get_version.outputs.current_version }} NewVal ${{ steps.version_value.outputs.version }}"
     
       - name: Create the Tag
         run: |
-          if [[ ${{ steps.get_version.outputs.current_version }} != "Not Updated"
+          if [[ ${{ steps.get_version.outputs.current_version }} != "Not Updated" ]]
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             echo "Version is ${{ steps.get_version.outputs.current_version }} Filename is ${{ env.VERSION_FILE_LOCATION }} repository is ${{ github.repository }}."
