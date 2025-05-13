@@ -32,9 +32,10 @@ jobs:
             else
               changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})
             fi
+            echo "File location $version_file_location"
             for file in $changed_files; do
               if [[ $file == *"$version_file_location"* ]]; then
-                current_version=$(cat VERSION)
+                current_version=$(cat VERSION) >> $GITHUB_OUTPUT
               fi
             done
       - name: Create the Tag
