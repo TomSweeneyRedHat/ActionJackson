@@ -1,4 +1,4 @@
-h# This is a workflow to watch for a merged PR with a specific
+# This is a workflow to watch for a merged PR with a specific
 # Tag used to denote a version bump to a new `Y` version.  Once found,
 # it will create a Tag and then a Release based on that tag.name: Automatic Tagging
 
@@ -48,7 +48,7 @@ jobs:
     
       - name: Create the Tag
         run: |
-          if [[ ${{ steps.get_version.outputs.current_version }} != "Not Updated" ]]
+          if [[ ${{ steps.get_version.outputs.current_version }} != Not Updated ]]
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             echo "Version is ${{ steps.get_version.outputs.current_version }} Filename is ${{ env.VERSION_FILE_LOCATION }} repository is ${{ github.repository }}."
