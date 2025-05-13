@@ -33,6 +33,7 @@ jobs:
       - name: Watch for version file change from a pull, or a direct push
         id: get_version
         run: |
+            echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
             if [[ ${{ github.event_name }} == 'pull_request' ]]; then
               changed_files=$(git diff --name-only -r HEAD^1 HEAD)
             else
@@ -47,8 +48,10 @@ jobs:
     
       - name: Create the Tag
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          echo "Version is ${{ steps.get_version.outputs.current_version }} Filename is ${{ env.VERSION_FILE_LOCATION }} repository is ${{ github.repository }}."
-          git tag -a "v${{ steps.get_version.outputs.current_version }}" -m "v${{ steps.get_version.outputs.current_version }}"
-          git push origin "v${{ steps.get_version.outputs.current_version }}"
+          if [[ ${{ steps.get_version.outputs.current_version }} != "Not Updated"
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            echo "Version is ${{ steps.get_version.outputs.current_version }} Filename is ${{ env.VERSION_FILE_LOCATION }} repository is ${{ github.repository }}."
+            git tag -a "v${{ steps.get_version.outputs.current_version }}" -m "v${{ steps.get_version.outputs.current_version }}"
+            git push origin "v${{ steps.get_version.outputs.current_version }}"
+          fi
