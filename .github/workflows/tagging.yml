@@ -43,7 +43,7 @@ jobs:
                 current_version= `cat ${ env.VERSION_FILE_LOCATION }` >> $GITHUB_OUTPUT
               fi
             done
-            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: $current_version NewVal ${{ steps.version_value.outputs.current_version }}"
+            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: $current_version NewVal ${{ steps.version_value.outputs.version }}"
     
       - name: Create the Tag
         run: |
