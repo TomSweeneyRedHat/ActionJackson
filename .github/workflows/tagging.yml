@@ -30,7 +30,7 @@ jobs:
         id: version_value
         run: echo "version=$(cat ${{ env.VERSION_FILE_LOCATION }})" >> $GITHUB_OUTPUT
         
-      - name: Watch for version file change from a pull, or a direct push
+      - name: Watch for a version file change from a pull, or a direct push
         id: get_version
         run: |
             echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
@@ -44,11 +44,10 @@ jobs:
                 echo "current_version=${{ steps.version_value.outputs.version }}" >> $GITHUB_OUTPUT
               fi
             done
-            echo "File location ${{ env.VERSION_FILE_LOCATION }} BigValue: ${{ steps.get_version.outputs.current_version }} NewVal ${{ steps.version_value.outputs.version }}"
     
       - name: Create the Tag
         run: |
-          echo "Version is ${{ steps.get_version.outputs.current_version }} Filename is ${{ env.VERSION_FILE_LOCATION }} repository is ${{ github.repository }}."
+          echo "Version is `${{ steps.get_version.outputs.current_version }}`, Filename is `${{ env.VERSION_FILE_LOCATION }}` Repository is `${{ github.repository }}`."
           if [[ "${{ steps.get_version.outputs.current_version }}" != "Not Updated" ]]; then
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
