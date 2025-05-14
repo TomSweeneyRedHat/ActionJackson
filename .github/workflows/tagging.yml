@@ -48,10 +48,10 @@ jobs:
     
       - name: Create the Tag
         run: |
-          if [[ ${{ steps.get_version.outputs.current_version }} != Not Updated ]]
+          echo "Version is ${{ steps.get_version.outputs.current_version }} Filename is ${{ env.VERSION_FILE_LOCATION }} repository is ${{ github.repository }}."
+          if [[ ${{ steps.get_version.outputs.current_version }} != Not Updated ]]; then
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
-            echo "Version is ${{ steps.get_version.outputs.current_version }} Filename is ${{ env.VERSION_FILE_LOCATION }} repository is ${{ github.repository }}."
             git tag -a "v${{ steps.get_version.outputs.current_version }}" -m "v${{ steps.get_version.outputs.current_version }}"
             git push origin "v${{ steps.get_version.outputs.current_version }}"
           fi
