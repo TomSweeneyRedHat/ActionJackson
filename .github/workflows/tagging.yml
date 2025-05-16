@@ -42,6 +42,7 @@ jobs:
               changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})
             fi
             for file in $changed_files; do
+              echo "Changed file: $file"
               if [[ $file == env.VERSION_FILE_LOCATION ]]; then
                 echo "current_version=${{ steps.version_value.outputs.version }}" >> $GITHUB_OUTPUT
               fi
