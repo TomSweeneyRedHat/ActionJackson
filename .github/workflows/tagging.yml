@@ -10,9 +10,11 @@ on:
   workflow_dispatch:
   # Triggers the workflow on push request events, but only for the "main" branch
   pull_request:
-    types: [closed]
+    types: [merged]
     branches: [ "main" ]
-
+  push:
+    branches: [ "main" ]
+    
 # Set the permission for this workflow
 permissions:
   contents: write
