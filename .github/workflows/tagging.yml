@@ -37,9 +37,10 @@ jobs:
         run: |
             echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
             if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-              changed_files=$(git diff --name-only -r HEAD^1 HEAD)
+              echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
             else
-              changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})
+              echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+
             fi
             echos "ChangeFiles all: ($changed_files)"
             for file in $changed_files; do
