@@ -42,7 +42,7 @@ jobs:
               echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
 
             fi
-            echos "ChangeFiles all: ($changed_files)"
+            echo "ChangeFiles all: ($changed_files)"
             for file in $changed_files; do
               echo "Changed file: $file"
               if [[ $file == env.VERSION_FILE_LOCATION ]]; then
