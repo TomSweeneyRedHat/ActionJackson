@@ -7,11 +7,7 @@ on:
   pull_request:
     branches:
       - main
-
-on:
-# Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-  
+ 
 jobs:
   # ------------------------------------------------------------------------------------------------------------------------------------------------
   # Event `pull_request`: Compare the last commit of the main branch or last remote commit of the PR branch -> to the current commit of a PR branch.
