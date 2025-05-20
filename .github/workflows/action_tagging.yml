@@ -7,7 +7,14 @@ on:
   pull_request:
     branches:
       - main
- 
+
+# Set the permission for this workflow
+permissions:
+  contents: write
+
+env:
+  VERSION_FILE_LOCATION: "VERSION"
+  
 jobs:
   # ------------------------------------------------------------------------------------------------------------------------------------------------
   # Event `pull_request`: Compare the last commit of the main branch or last remote commit of the PR branch -> to the current commit of a PR branch.
@@ -35,3 +42,15 @@ jobs:
           for file in ${ALL_CHANGED_FILES}; do
             echo "$file was changed"
           done
+
+      - name: Watch for a version file change from a pull, or a direct push
+        id: get_version
+        run: |
+            echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
+            echo "ChangeFiles all: ($changed_files)"
+            for file in ${ALL_CHANGED_FILES}; do
+              echo "Changed file: $file"
+              if [[ $file == env.VERSION_FILE_LOCATION ]]; then
+                echo "current_version=${{ steps.version_value.outputs.version }}" >> $GITHUB_OUTPUT
+              fi
+            done
