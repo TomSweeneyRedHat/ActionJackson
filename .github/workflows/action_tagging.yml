@@ -1,10 +1,17 @@
 name: action_tagging
 
 on:
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
   pull_request:
     branches:
       - main
 
+on:
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
 jobs:
   # ------------------------------------------------------------------------------------------------------------------------------------------------
   # Event `pull_request`: Compare the last commit of the main branch or last remote commit of the PR branch -> to the current commit of a PR branch.
@@ -16,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # -----------------------------------------------------------------------------------------------------------
-      # Example 1
+      # Get All Changed Files
       # -----------------------------------------------------------------------------------------------------------
       - name: Get changed files
         id: changed-files
