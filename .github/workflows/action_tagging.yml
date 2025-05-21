@@ -45,7 +45,7 @@ jobs:
 
       - name: List all changed files Too
         run: |
-          for file in ${ALL_CHANGED_FILES}; do
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed too"
           done
           
