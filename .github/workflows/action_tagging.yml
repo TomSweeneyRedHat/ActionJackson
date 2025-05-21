@@ -43,12 +43,17 @@ jobs:
             echo "$file was changed"
           done
 
+      - name: List all changed files Too
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed too"
+          done
+          
       - name: Watch for a version file change from a pull, or a direct push
         id: get_version
         run: |
-            for file in ${ALL_CHANGED_FILES}; do
-              echo "$file was changed"
-            done
             echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
             for file in ${ALL_CHANGED_FILES}; do
               echo "Changed file: $file"
