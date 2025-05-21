@@ -46,8 +46,11 @@ jobs:
       - name: Watch for a version file change from a pull, or a direct push
         id: get_version
         run: |
+            for file in ${ALL_CHANGED_FILES}; do
+              echo "$file was changed"
+            done
             echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
-            echo "ChangeFiles all: (${ALL_CHANGED_FILES})"
+#            echo "ChangeFiles all: (${ALL_CHANGED_FILES})"
             for file in ${ALL_CHANGED_FILES}; do
               echo "Changed file: $file"
               if [[ $file == env.VERSION_FILE_LOCATION ]]; then
