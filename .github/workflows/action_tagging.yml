@@ -51,6 +51,7 @@ jobs:
         id: get_version
         run: |
             echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
+            echo "Env value= ${{ steps.version_value.outputs.version }}"
             for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
               echo "Changed file: $file"
               if [[ $file == env.VERSION_FILE_LOCATION ]]; then
@@ -61,7 +62,7 @@ jobs:
       - name: Create the Tag
         run: |
           echo "Version is `${{ steps.get_version.outputs.current_version }}`, Filename is `${{ env.VERSION_FILE_LOCATION }}` Repository is `${{ github.repository }}`."
-          if [[ "${{ steps.get_version.outputs.current_version }}" != "Not Updated" ]]; then
+          if [[ ${{ steps.get_version.outputs.current_version }} != "Not Updated" ]]; then
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             git tag -a "v${{ steps.get_version.outputs.current_version }}" -m "v${{ steps.get_version.outputs.current_version }}"
