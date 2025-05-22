@@ -75,7 +75,7 @@ jobs:
       # -----------------------------------------------------------------------------------------------------------
       - name: Create the Tag
         run: |
-          echo "Version is `${{ env.CURRENT_VERSION }}`, Filename is `${{ env.VERSION_FILE_LOCATION }}` Repository is `${{ github.repository }}`."
+          echo "Version is ${{ env.CURRENT_VERSION }}, Filename is ${{ env.VERSION_FILE_LOCATION }} Repository is ${{ github.repository }}."
           if [[ ${{ env.CURRENT_VERSION }} != "Not Updated" ]]; then
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
