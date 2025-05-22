@@ -1,20 +1,24 @@
-name: action_tagging
+name: Auto Tag on Version Bump
 
+# Controls when the workflow will run
 on:
 # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+  # Triggers the workflow on push request events, but only for the "main" branch
   pull_request:
-    branches:
-      - main
+    types: [merged]
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 # Set the permission for this workflow
 permissions:
   contents: write
 
 env:
-  VERSION_FILE_LOCATION: "VERSION"
+  ALL_CHANGED_FILES: ""
   CURRENT_VERSION: "Not Updated"
+  VERSION_FILE_LOCATION: "VERSION"
 
   
 jobs:
@@ -41,20 +45,24 @@ jobs:
         # with:
         #   since_last_remote_commit: true 
 
+      # -----------------------------------------------------------------------------------------------------------
+      # List All Changed Files
+      # -----------------------------------------------------------------------------------------------------------
       - name: List all changed files
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          for file in ${ALL_CHANGED_FILES}; do
+          echo "ALL_CHANGED_FILES=${{ steps.changed-files.outputs.all_changed_files }}" >> $GITHUB_ENV
+          for file in ${env.ALL_CHANGED_FILES}; do
             echo "$file was changed"
           done
-       
+      # -----------------------------------------------------------------------------------------------------------
+      # Watch for a change in the version file in the repository
+      # -----------------------------------------------------------------------------------------------------------       
       - name: Watch for a version file change from a pull, or a direct push
         id: get_version
         run: |
             echo "Env value= ${{ steps.version_value.outputs.version }}"
             echo "Local: ${{ env.VERSION_FILE_LOCATION }}"
-            for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            for file in ${env.ALL_CHANGED_FILES}; do
               echo "Changed file: $file"
               if [[ $file == ${{ env.VERSION_FILE_LOCATION }} ]]; then
                 echo "CURRENT_VERSION=${{ steps.version_value.outputs.version }}" >> $GITHUB_ENV
@@ -62,6 +70,9 @@ jobs:
             done
             echo "Leaving version:  ${{ env.CURRENT_VERSION }}"
 
+      # -----------------------------------------------------------------------------------------------------------
+      # Create the Tag if needed
+      # -----------------------------------------------------------------------------------------------------------
       - name: Create the Tag
         run: |
           echo "Version is `${{ env.CURRENT_VERSION }}`, Filename is `${{ env.VERSION_FILE_LOCATION }}` Repository is `${{ github.repository }}`."
