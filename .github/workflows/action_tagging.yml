@@ -52,7 +52,7 @@ jobs:
         run: |
             echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
             echo "Env value= ${{ steps.version_value.outputs.version }}"
-            echo "Local: env.VERSON_FILE_LOCATION"
+            echo "Local: ${{ env.VERSION_FILE_LOCATION }}"
             for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
               echo "Changed file: $file"
               if [[ $file == env.VERSION_FILE_LOCATION ]]; then
