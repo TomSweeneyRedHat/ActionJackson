@@ -74,13 +74,9 @@ jobs:
       # Create the Tag if needed
       # -----------------------------------------------------------------------------------------------------------
       - name: Create the Tag
+        if: env.CURRENT_VERSION != 'Not Updated'
         run: |
-          # echo "Version is ${{ env.CURRENT_VERSION }}, Filename is ${{ env.VERSION_FILE_LOCATION }}, Repository is ${{ github.repository }}."
-          if [[ ${{env.CURRENT_VERSION}} != 'Not Updated' ]]; then
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git tag -a "v${{ env.CURRENT_VERSION }}" -m "v${{ env.CURRENT_VERSION }}"
-            git push origin "v${{ env.CURRENT_VERSION }}"
-          else
-            echo "Tag not needed or created"
-          fi
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v${{ env.CURRENT_VERSION }}" -m "v${{ env.CURRENT_VERSION }}"
+          git push origin "v${{ env.CURRENT_VERSION }}"
