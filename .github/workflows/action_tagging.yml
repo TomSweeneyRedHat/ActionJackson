@@ -51,7 +51,7 @@ jobs:
       - name: List all changed files
         run: |
           echo "ALL_CHANGED_FILES=${{ steps.changed-files.outputs.all_changed_files }}" >> $GITHUB_ENV
-          for file in ${env.ALL_CHANGED_FILES}; do
+          for file in ${{env.ALL_CHANGED_FILES}}; do
             echo "$file was changed"
           done
       # -----------------------------------------------------------------------------------------------------------
@@ -60,9 +60,9 @@ jobs:
       - name: Watch for a version file change from a pull, or a direct push
         id: get_version
         run: |
-            echo "Env value= ${{ steps.version_value.outputs.version }}"
+            echo "Version value= ${{ steps.version_value.outputs.version }}"
             echo "Local: ${{ env.VERSION_FILE_LOCATION }}"
-            for file in ${env.ALL_CHANGED_FILES}; do
+            for file in ${{env.ALL_CHANGED_FILES}}; do
               echo "Changed file: $file"
               if [[ $file == ${{ env.VERSION_FILE_LOCATION }} ]]; then
                 echo "CURRENT_VERSION=${{ steps.version_value.outputs.version }}" >> $GITHUB_ENV
