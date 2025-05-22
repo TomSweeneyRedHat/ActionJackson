@@ -60,7 +60,7 @@ jobs:
                 echo "CURRENT_VERSION=${{ steps.version_value.outputs.version }}" >> $GITHUB_ENV
               fi
             done
-            echo "Leaving version: env.CURRENT_VERSION"
+            echo "Leaving version:  ${{ env.CURRENT_VERSION }}"
 
       - name: Create the Tag
         run: |
