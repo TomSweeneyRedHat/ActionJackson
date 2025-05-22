@@ -55,7 +55,7 @@ jobs:
             echo "Local: ${{ env.VERSION_FILE_LOCATION }}"
             for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
               echo "Changed file: $file"
-              if [[ $file == env.VERSION_FILE_LOCATION ]]; then
+              if [[ $file == ${{ env.VERSION_FILE_LOCATION }} ]]; then
                 echo "current_version=${{ steps.version_value.outputs.version }}" >> $GITHUB_OUTPUT
               fi
             done
