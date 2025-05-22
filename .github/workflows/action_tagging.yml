@@ -81,4 +81,6 @@ jobs:
             git config --local user.name "GitHub Action"
             git tag -a "v${{ env.CURRENT_VERSION }}" -m "v${{ env.CURRENT_VERSION }}"
             git push origin "v${{ env.CURRENT_VERSION }}"
+          else
+            echo "Tag not needed or created"
           fi
