@@ -14,6 +14,8 @@ permissions:
 
 env:
   VERSION_FILE_LOCATION: "VERSION"
+  CURRENT_VERSION: "Not Updated"
+
   
 jobs:
   # ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,23 +52,22 @@ jobs:
       - name: Watch for a version file change from a pull, or a direct push
         id: get_version
         run: |
-            echo "current_version=Not Updated"  >> $GITHUB_OUTPUT
             echo "Env value= ${{ steps.version_value.outputs.version }}"
             echo "Local: ${{ env.VERSION_FILE_LOCATION }}"
             for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
               echo "Changed file: $file"
               if [[ $file == ${{ env.VERSION_FILE_LOCATION }} ]]; then
-                echo "current_version=${{ steps.version_value.outputs.version }}" >> $GITHUB_OUTPUT
+                echo "CURRENT_VERSION=${{ steps.version_value.outputs.version }}" >> $GITHUB_ENV
               fi
             done
-            echo "Leaving version: $current_version"
+            echo "Leaving version: env.CURRENT_VERSION"
 
       - name: Create the Tag
         run: |
-          echo "Version is `${{ steps.get_version.outputs.current_version }}`, Filename is `${{ env.VERSION_FILE_LOCATION }}` Repository is `${{ github.repository }}`."
-          if [[ ${{ steps.get_version.outputs.current_version }} != "Not Updated" ]]; then
+          echo "Version is `${{ env.CURRENT_VERSION }}`, Filename is `${{ env.VERSION_FILE_LOCATION }}` Repository is `${{ github.repository }}`."
+          if [[ ${{ env.CURRENT_VERSION }} != "Not Updated" ]]; then
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
-            git tag -a "v${{ steps.get_version.outputs.current_version }}" -m "v${{ steps.get_version.outputs.current_version }}"
-            git push origin "v${{ steps.get_version.outputs.current_version }}"
+            git tag -a "v${{ env.CURRENT_VERSION }}" -m "v${{ env.CURRENT_VERSION }}"
+            git push origin "v${{ env.CURRENT_VERSION }}"
           fi
