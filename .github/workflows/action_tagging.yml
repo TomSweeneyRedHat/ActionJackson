@@ -85,13 +85,13 @@ jobs:
       # Create the Release if needed
       # -----------------------------------------------------------------------------------------------------------
       - name: Create the Release
-        if: env.CURRENT_VERSION != 'Not Updated'
         uses: actions/create-release@v1
+        if: env.CURRENT_VERSION != 'Not Updated'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: 'v${{ env.CURRENT_VERSION }}'
-            release_name: 'v${{ steps.get_version.outputs.current_version }}'
-            body: 'Changelog for v${{ steps.get_version.outputs.current_version }}'
-            draft: false
-            prerelease: false
+        with:
+          tag_name: 'v${{ env.CURRENT_VERSION }}'
+          release_name: 'v${{ steps.get_version.outputs.current_version }}'
+          body: 'Changelog for v${{ steps.get_version.outputs.current_version }}'
+          draft: false
+          prerelease: false
