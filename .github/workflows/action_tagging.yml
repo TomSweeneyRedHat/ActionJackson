@@ -85,7 +85,6 @@ jobs:
       # Create the Release if needed
       # -----------------------------------------------------------------------------------------------------------
       # if: env.CURRENT_VERSION != 'Not Updated'
-
       - name: Create the Release
         uses: actions/create-release@v1
         env:
