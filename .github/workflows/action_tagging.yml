@@ -1,4 +1,4 @@
-name: Auto Tag on Version Bump
+name: Auto Tag and Release on Version Bump
 
 # Controls when the workflow will run
 on:
