@@ -85,12 +85,12 @@ jobs:
       # Create the Changelog
       # -----------------------------------------------------------------------------------------------------------
       - name: Conventional Changelog Action
-             id: changelog 
-             uses: TriPSs/conventional-changelog-action@v3 
-             if: env.CURRENT_VERSION != 'Not Updated'
-             with: 
-                 github-token: ${{ secrets.github_token } 
-                 output-file: "false" 
+        id: changelog 
+        uses: TriPSs/conventional-changelog-action@v3 
+        if: env.CURRENT_VERSION != 'Not Updated'
+        with: 
+           github-token: ${{ secrets.github_token } 
+           output-file: "false" 
   
       # -----------------------------------------------------------------------------------------------------------
       # Create the Release if needed
