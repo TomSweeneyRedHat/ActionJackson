@@ -89,14 +89,15 @@ jobs:
         if: env.CURRENT_VERSION != 'Not Updated'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #with:
-          tag_name: v${{ env.CURRENT_VERSION }}
+       
           run: |
-            gh release create "$tag" \
+            gh release create "v${{ env.CURRENT_VERSION }}" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${tag}" \
+              --title="v${{ env.CURRENT_VERSION }}" \
               --generate-notes
         # HOLD
+        #with:
+        #  tag_name: v${{ env.CURRENT_VERSION }}
         #  release_name: v${{ env.CURRENT_VERSION }}
         #  body: 'Changelog for v${{ env.CURRENT_VERSION }}'
         #  # IMPORTANT: This setting automatically generates release notes
