@@ -89,13 +89,19 @@ jobs:
         if: env.CURRENT_VERSION != 'Not Updated'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
+        #with:
           tag_name: v${{ env.CURRENT_VERSION }}
-          release_name: v${{ env.CURRENT_VERSION }}
-          body: 'Changelog for v${{ env.CURRENT_VERSION }}'
-          # IMPORTANT: This setting automatically generates release notes
-          # based on the commits included since the last release, effectively
-          # showing the changes from your commit log.
-          generate_release_notes: true
-          draft: false
-          prerelease: false
+          run: |
+            gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${tag}" \
+              --generate-notes
+        # HOLD
+        #  release_name: v${{ env.CURRENT_VERSION }}
+        #  body: 'Changelog for v${{ env.CURRENT_VERSION }}'
+        #  # IMPORTANT: This setting automatically generates release notes
+        #  # based on the commits included since the last release, effectively
+        #  # showing the changes from your commit log.
+        #  generate_release_notes: true
+        #  draft: false
+        #  prerelease: false
