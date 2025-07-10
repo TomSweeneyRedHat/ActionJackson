@@ -111,6 +111,6 @@ jobs:
           release_name: v${{ env.CURRENT_VERSION }}
           body: |
             'Changelog for v${{ env.CURRENT_VERSION }}'
-            ${{ steps.changelog.outputs.clean_changelog }
+            ${{ steps.changelog.outputs.clean_changelog }}
           draft: false
           prerelease: false
