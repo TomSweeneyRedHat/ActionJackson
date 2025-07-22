@@ -109,8 +109,8 @@ jobs:
         with:
           tag_name: v${{ env.CURRENT_VERSION }}
           release_name: v${{ env.CURRENT_VERSION }}
-          body: |
-            'Changelog for v${{ env.CURRENT_VERSION }}'
-            ${{ steps.changelog.outputs.clean_changelog }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+      #      'Changelog for v${{ env.CURRENT_VERSION }}'
+
           draft: false
           prerelease: false
