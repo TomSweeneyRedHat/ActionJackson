@@ -90,6 +90,7 @@ jobs:
         if: env.CURRENT_VERSION != 'Not Updated'
         with: 
            github-token: ${{ secrets.github_token }}
+           version-file: "${{ env.VERSION_FILE_LOCATION }}"
            output-file: "false" 
   
       # -----------------------------------------------------------------------------------------------------------
