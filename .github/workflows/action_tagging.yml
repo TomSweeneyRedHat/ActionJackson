@@ -97,7 +97,8 @@ jobs:
         id: changelog 
         uses: janheinrichmerker/action-github-changelog-generator@v2.3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          onlyLastTag: true
   
       # -----------------------------------------------------------------------------------------------------------
       # Create the Release if needed
