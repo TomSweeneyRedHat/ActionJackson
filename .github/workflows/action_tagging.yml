@@ -84,14 +84,28 @@ jobs:
       # -----------------------------------------------------------------------------------------------------------
       # Create the Changelog
       # -----------------------------------------------------------------------------------------------------------
+      #- name: Conventional Changelog Action
+      #  id: changelog 
+      #  uses: TriPSs/conventional-changelog-action@v3 
+      #  if: env.CURRENT_VERSION != 'Not Updated'
+      #  with: 
+      #     github-token: ${{ secrets.github_token }}
+      #     version-file: "${{ env.VERSION_FILE_LOCATION }}"
+      #     output-file: "false" 
+
       - name: Conventional Changelog Action
-        id: changelog 
-        uses: TriPSs/conventional-changelog-action@v3 
-        if: env.CURRENT_VERSION != 'Not Updated'
-        with: 
-           github-token: ${{ secrets.github_token }}
-           version-file: "${{ env.VERSION_FILE_LOCATION }}"
-           output-file: "false" 
+        on:
+          release:
+            types:
+              - created
+        jobs:
+          changelog:
+          runs-on: ubuntu-latest
+          steps:
+            - name: "✏️ Generate release changelog"
+              uses: janheinrichmerker/action-github-changelog-generator@v2.3
+               with:
+                 token: ${{ secrets.GITHUB_TOKEN }} 
   
       # -----------------------------------------------------------------------------------------------------------
       # Create the Release if needed
@@ -110,7 +124,7 @@ jobs:
         with:
           tag_name: v${{ env.CURRENT_VERSION }}
           release_name: v${{ env.CURRENT_VERSION }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+          body: ${{ steps.changelog.outputs.changelog }}
       #      'Changelog for v${{ env.CURRENT_VERSION }}'
 
           draft: false
