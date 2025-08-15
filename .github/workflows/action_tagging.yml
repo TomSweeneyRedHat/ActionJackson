@@ -94,10 +94,7 @@ jobs:
       #     output-file: "false" 
 
       - name: Conventional Changelog Action
-        on:
-          release:
-            types:
-              - created
+        id: changelog 
         jobs:
           changelog:
           runs-on: ubuntu-latest
