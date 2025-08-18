@@ -103,6 +103,7 @@ jobs:
       - name: Conventional Changelog Action
         id: changelog 
         uses: gableroux/generate-github-release-notes@v0.1.2
+        if: env.CURRENT_VERSION != 'Not Updated'
         with:
            github_token: ${{ secrets.GITHUB_TOKEN }}
        #    base_tag: ${{ steps.currentrelease.outputs.tag_name }}
