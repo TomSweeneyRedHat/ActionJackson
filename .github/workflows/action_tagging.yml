@@ -77,14 +77,14 @@ jobs:
         id: currentrelease
         uses: joutvhu/get-release@v1
         if: env.CURRENT_VERSION != 'Not Updated'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           latest: true
           # Tag name starts with `v`
           pattern: '^v.*'
           # Including pre-release
           prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # -----------------------------------------------------------------------------------------------------------
       # Create the Tag if needed
