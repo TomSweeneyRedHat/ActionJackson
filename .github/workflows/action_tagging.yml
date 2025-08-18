@@ -76,7 +76,6 @@ jobs:
       - name: Get Latest Release
         id: currentrelease
         uses: joutvhu/get-release@v1
-        if: env.CURRENT_VERSION != 'Not Updated'
         with:
           latest: true
           # Tag name start with `v`
