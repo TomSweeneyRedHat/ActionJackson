@@ -73,6 +73,22 @@ jobs:
       # -----------------------------------------------------------------------------------------------------------
       # Create the Tag if needed
       # -----------------------------------------------------------------------------------------------------------
+      - name: Get Latest Release
+        id: currentrelease
+        uses: joutvhu/get-release@v1
+        if: env.CURRENT_VERSION != 'Not Updated'
+        with:
+          latest: true
+          # Tag name start with `v`
+          pattern: '^v.*'
+          # Including pre-release
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # -----------------------------------------------------------------------------------------------------------
+      # Create the Tag if needed
+      # -----------------------------------------------------------------------------------------------------------
       - name: Create the Tag
         if: env.CURRENT_VERSION != 'Not Updated'
         run: |
@@ -93,13 +109,23 @@ jobs:
       #     version-file: "${{ env.VERSION_FILE_LOCATION }}"
       #     output-file: "false" 
 
-      - name: Conventional Changelog Action
-        id: changelog 
-        uses: janheinrichmerker/action-github-changelog-generator@v2.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          author: true
-          pullRequests: true
+      # - name: Conventional Changelog Action
+      #   id: changelog 
+      #   uses: janheinrichmerker/action-github-changelog-generator@v2.3
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     author: true
+      #     pullRequests: true
+          
+        - name: Conventional Changelog Action
+          id: changelog 
+          uses:   uses: gableroux/generate-github-release-notes@v0.1.2
+          with:
+             github_token: ${{ secrets.GITHUB_TOKEN }}
+             base_tag: ${{ steps.currentrelease.outputs.tag_name }}
+             head_tag: "v${{ env.CURRENT_VERSION }}"
+             repository: ${{ github.repository }}
+             auto_detect_new_contributors: 'true'
   
       # -----------------------------------------------------------------------------------------------------------
       # Create the Release if needed
