@@ -106,8 +106,7 @@ jobs:
         if: env.CURRENT_VERSION != 'Not Updated'
         with:
            github_token: ${{ secrets.GITHUB_TOKEN }}
-       #    base_tag: ${{ steps.currentrelease.outputs.tag_name }}
-           base_tag: "v${{ env.CURRENT_VERSION }}"
+           base_tag: ${{ steps.currentrelease.outputs.tag_name }}
            head_tag: "v${{ env.CURRENT_VERSION }}"
            repository: ${{ github.repository }}
            auto_detect_new_contributors: 'true'
