@@ -93,23 +93,14 @@ jobs:
       #     version-file: "${{ env.VERSION_FILE_LOCATION }}"
       #     output-file: "false" 
 
-      # - name: Conventional Changelog Action
-      #   id: changelog 
-      #   uses: janheinrichmerker/action-github-changelog-generator@v2.3
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     author: true
-      #     pullRequests: true
-          
-        - name: Conventional Changelog Action
-          id: changelog 
-          uses: gableroux/generate-github-release-notes@v0.1.2
-          with:
-             github_token: ${{ secrets.GITHUB_TOKEN }}
-             base_tag: ${{ steps.currentrelease.outputs.tag_name }}
-             head_tag: "v${{ env.CURRENT_VERSION }}"
-             repository: ${{ github.repository }}
-             auto_detect_new_contributors: 'true'
+      - name: Conventional Changelog Action
+        id: changelog 
+        uses: janheinrichmerker/action-github-changelog-generator@v2.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          author: true
+          pullRequests: true
+
   
       # -----------------------------------------------------------------------------------------------------------
       # Create the Release if needed
