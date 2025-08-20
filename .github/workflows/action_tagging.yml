@@ -54,8 +54,10 @@ jobs:
           for file in ${{env.ALL_CHANGED_FILES}}; do
             echo "$file was changed"
           done
+
       # -----------------------------------------------------------------------------------------------------------
-      # Watch for a change in the version file in the repository
+      # Watch for a change in the version file in the repository.  Change CURRENT_VERSION to the value within
+      # if it has changed
       # -----------------------------------------------------------------------------------------------------------       
       - name: Watch for a version file change from a pull, or a direct push
         id: get_version
@@ -68,10 +70,10 @@ jobs:
                 echo "CURRENT_VERSION=${{ steps.version_value.outputs.version }}" >> $GITHUB_ENV
               fi
             done
-            echo "Leaving version:  ${{ env.CURRENT_VERSION }}"
+            echo "Leaving get_version:  ${{ env.CURRENT_VERSION }}"
 
       # -----------------------------------------------------------------------------------------------------------
-      # Find the current Release
+      # Find the current Release if the version has changed.
       # -----------------------------------------------------------------------------------------------------------
       - name: Get Latest Release
         id: currentrelease
@@ -87,7 +89,7 @@ jobs:
           prerelease: true
 
       # -----------------------------------------------------------------------------------------------------------
-      # Create the Tag if needed
+      # Create the Tag if the version has changed.
       # -----------------------------------------------------------------------------------------------------------
       - name: Create the Tag
         if: env.CURRENT_VERSION != 'Not Updated'
@@ -98,24 +100,8 @@ jobs:
           git push origin "v${{ env.CURRENT_VERSION }}"
           
       # -----------------------------------------------------------------------------------------------------------
-      # Create the Changelog
+      # Create the Changelog if the version has changed.
       # -----------------------------------------------------------------------------------------------------------
-      #- name: Conventional Changelog Action
-      #  id: changelog 
-      #  uses: TriPSs/conventional-changelog-action@v3 
-      #  if: env.CURRENT_VERSION != 'Not Updated'
-      #  with: 
-      #     github-token: ${{ secrets.github_token }}
-      #     version-file: "${{ env.VERSION_FILE_LOCATION }}"
-      #     output-file: "false" 
-      #- name: Conventional Changelog Action
-      #  id: changelog 
-      #  uses: janheinrichmerker/action-github-changelog-generator@v2.3
-      #  with:
-      #    token: ${{ secrets.GITHUB_TOKEN }}
-      #    author: true
-      #    pullRequests: true
-
       - name: Conventional Changelog Action
         id: changelog 
         uses: gableroux/generate-github-release-notes@v0.1.2
@@ -129,19 +115,13 @@ jobs:
 
   
       # -----------------------------------------------------------------------------------------------------------
-      # Create the Release if needed
+      # Create the Release if the version has changed.
       # -----------------------------------------------------------------------------------------------------------
       - name: Create the Release
         uses: actions/create-release@v1
         if: env.CURRENT_VERSION != 'Not Updated'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # HOLD
-      #    run: |
-      #      gh release create 'v${{ env.CURRENT_VERSION }}' \
-      #        --repo="$GITHUB_REPOSITORY" \
-      #        --title="v${{ env.CURRENT_VERSION }}" \
-      #        --generate-notes
         with:
           tag_name: v${{ env.CURRENT_VERSION }}
           release_name: v${{ env.CURRENT_VERSION }}
