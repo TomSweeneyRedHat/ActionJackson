@@ -112,7 +112,6 @@ jobs:
            head_tag: "v${{ env.CURRENT_VERSION }}"
            repository: ${{ github.repository }}
            auto_detect_new_contributors: 'true'
-
   
       # -----------------------------------------------------------------------------------------------------------
       # Create the Release if the version has changed.
