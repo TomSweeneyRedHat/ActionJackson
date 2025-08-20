@@ -3,6 +3,4 @@ GitHub Actions Play Repository
 
 I'm learning about GitHub Actions and wanted a repository I could safely abuse before using scripts elsewhere.
 
-Getting Closer to Reality!
-
 Definitely a use-at-your-own-risk type of repository!!!
