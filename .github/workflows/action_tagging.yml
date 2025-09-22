@@ -39,13 +39,13 @@ jobs:
       # -----------------------------------------------------------------------------------------------------------
       # Create the Changelog
       # -----------------------------------------------------------------------------------------------------------
+      #     base_tag: ${{ steps.currentrelease.outputs.tag_name }}
       - name: Conventional Changelog Action
         id: changelog 
         uses: gableroux/generate-github-release-notes@v0.1.2
         with:
            github_token: ${{ secrets.GITHUB_TOKEN }}
            base_tag: ${{ github.event.release.tag_name }}
-      #     base_tag: ${{ steps.currentrelease.outputs.tag_name }}
            head_tag: "${{ github.ref }}"
            repository: ${{ github.repository }}
            auto_detect_new_contributors: 'true'
