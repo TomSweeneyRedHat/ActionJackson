@@ -1,11 +1,16 @@
+# -----------------------------------------------------------------------------------------------------------
+# When a new tag is created, create a release on the main branch
+# -----------------------------------------------------------------------------------------------------------
 name: Auto Release on a new Tag
 
 # Controls when the workflow will run
 on: 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows you to run this workflow manually from the Actions tab.  Needed only for debugging
   workflow_dispatch:
   # This will trigger the workflow for any tag starting with 'v' (e.g., v1.0.0, v2.1.0-beta)
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
