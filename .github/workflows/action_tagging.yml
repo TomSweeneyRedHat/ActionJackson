@@ -11,8 +11,6 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - main
 
 # Set the permission for this workflow
 permissions:
