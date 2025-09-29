@@ -84,7 +84,7 @@ jobs:
               echo "::notice:: Release does not have release notes"
               exit 1
           else
-          echo "This is a release candidate of Podman v$ver. Full release notes will be available with a later RC." > $releasenotes
+          echo "This is a release candidate of container-libs v$ver. Full release notes will be available with a later RC." > $releasenotes
           fi
         fi
     - name: Display release notes
@@ -133,7 +133,7 @@ jobs:
             RC_PREFIX="candidate "
           fi
 
-          echo "mail_subj=Podman ${RC_PREFIX}${VERSION} Released" >> $GITHUB_OUTPUT
+          echo "mail_subj=container-libs ${RC_PREFIX}${VERSION} Released" >> $GITHUB_OUTPUT
 
           cat <<EOF>email_body.txt
           Hi all,
