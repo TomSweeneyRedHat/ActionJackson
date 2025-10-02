@@ -77,11 +77,15 @@ jobs:
     - name: Get release notes
       run: |
         ver="$(echo "$VERSION" | sed -e "s/^v//" -e "s/-rc.*//")"
+        echo "ver [${ver}]"
         releasenotes="$VERSION-release-notes.md"
-        echo "Release Notes [${releasenotes}]"
+        echo "Release Notes1 [${releasenotes}]"
         awk -v ver=$ver '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p' RELEASE_NOTES.md > $releasenotes
+        echo "Release Notes2 [${releasenotes}]"
         if [[ -z $(grep '[^[:space:]]' $releasenotes) ]]; then
+          echo "Release Notes3 [${releasenotes}]"
           if [[ $VERSION != *-rc* ]]; then
+              echo "Release Notes4 [${releasenotes}]"
               echo "::notice:: Release does not have release notes"
               exit 1
           else
