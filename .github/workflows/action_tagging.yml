@@ -70,7 +70,7 @@ jobs:
     env:
       VERSION: ${{needs.check.outputs.version}}
     steps:
-    - name: List Files in Repository
+    - name: TOM List Files in Repository
       run: ls -R ${{ github.workspace }} 
     - name: List local files and directories
       run: |
