@@ -77,7 +77,7 @@ jobs:
     - name: List local files and directories
       run: |
         echo "Listing contents of the current working directory:"
-        ls -la 
+        ls -la ..
     - name: Checkout Version
       uses: actions/checkout@v5
       with:
