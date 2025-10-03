@@ -91,7 +91,7 @@ jobs:
         echo "ver [${ver}]"
         releasenotes="$VERSION-release-notes.md"
         echo "Release Notes1 [${releasenotes}]"
-        awk -v ver=$ver '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p' RELEASE_NOTES.md > $releasenotes
+        awk -v ver=$ver '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p' ${{ github.workspace }}/RELEASE_NOTES.md > $releasenotes
         echo "Release Notes2 [${releasenotes}]"
         if [[ -z $(grep '[^[:space:]]' $releasenotes) ]]; then
           echo "Release Notes3 [${releasenotes}]"
