@@ -89,6 +89,8 @@ jobs:
       run: |
         ver="$(echo "$VERSION" | sed -e "s/^v//" -e "s/-rc.*//")"
         echo "ver [${ver}]"
+        echo "TOM: do the directory thing!"
+        ls -R ${{ github.workspace }}
         releasenotes="$VERSION-release-notes.md"
         echo "Release Notes1 [${releasenotes}]"
         awk -v ver=$ver '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p' ${{ github.workspace }}/RELEASE_NOTES.md > $releasenotes
