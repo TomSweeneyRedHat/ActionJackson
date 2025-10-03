@@ -72,9 +72,13 @@ jobs:
       
     steps:
     - name: Checkout the main branch of this repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
+      with:
+        ref: ${{needs.check.outputs.version}}
     - name: TOM Where Are We?
       run: pwd
+    - name: TOM Where Are We 2?
+      run: echo TOM WHERE: ${{needs.check.outputs.version}}
     - name: TOM List Files in Repository
       run: ls -R ${{ github.workspace }} 
     - name: List local files and directories
