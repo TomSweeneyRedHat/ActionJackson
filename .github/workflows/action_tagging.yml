@@ -69,7 +69,10 @@ jobs:
       contents: write
     env:
       VERSION: ${{needs.check.outputs.version}}
+      
     steps:
+    - name: Checkout the main branch of this repository
+      uses: actions/checkout@v4
     - name: TOM Where Are We?
       run: pwd
     - name: TOM List Files in Repository
