@@ -56,11 +56,9 @@ jobs:
             exit 1
           fi
         prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
-        prevvers=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//")
-        echo "PREVIOUS_VERSION=$prevvers" >> $GITHUB_ENV
+        prevver=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
-        echo "Previous Version: ${{ env.PREVIOUS_VERSION }}"
     
     - name: Determine release
       id: buildonly
@@ -77,6 +75,7 @@ jobs:
         echo "::notice::This will be build-only: $BUILDONLY"
     outputs:
       version: ${{ steps.getversion.outputs.version }}
+      previous_version: ${{ steps.getversion.output.prevvers }}
       buildonly: ${{ steps.buildonly.outputs.buildonly }}
 
 # -----------------------------------------------------------------------------------------------------------
