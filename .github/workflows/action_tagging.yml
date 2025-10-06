@@ -79,6 +79,8 @@ jobs:
       run: pwd
     - name: TOM List Files in Repository
       run: ls -R ${{ github.workspace }} 
+    - name: TOM cat release notes
+      run: cat ${{ github.workspace }}/RELEASE_NOTES.md
     - name: List local files and directories
       run: |
         echo "Listing contents of the current working directory:"
