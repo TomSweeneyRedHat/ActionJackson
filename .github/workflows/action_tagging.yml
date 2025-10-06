@@ -23,6 +23,13 @@ on:
           - "true"  # Must be quoted string, boolean value not supported.
           - "false"
 
+# Set the permission for this workflow
+permissions:
+  contents: write
+
+env:
+  PREVIOUS_VERSION: ""
+
 jobs:
   check:
     name: Check
@@ -48,8 +55,13 @@ jobs:
             echo "Refusing to process a "-dev" version '$VERSION'"
             exit 1
           fi
+        prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+        prevvers=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//")
+        echo "PREVIOUS_VERSION=${{ prevvers }}" >> $GITHUB_ENV
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
+        echo "Previous Version: $PREVIOUS_VERSION"
+    
     - name: Determine release
       id: buildonly
       run: |
@@ -67,6 +79,9 @@ jobs:
       version: ${{ steps.getversion.outputs.version }}
       buildonly: ${{ steps.buildonly.outputs.buildonly }}
 
+# -----------------------------------------------------------------------------------------------------------
+# Start the release process
+# -----------------------------------------------------------------------------------------------------------
   release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -118,6 +133,23 @@ jobs:
         fi
     - name: Display release notes
       run: cat $VERSION-release-notes.md
+
+    # -----------------------------------------------------------------------------------------------------------
+    # Create the Changelog
+    # -----------------------------------------------------------------------------------------------------------
+    - name: Conventional Changelog Action
+      id: changelog 
+      uses: gableroux/generate-github-release-notes@v0.1.2
+      with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         base_tag: ${{ steps.currentrelease.outputs.tag_name }}
+         head_tag: "${{ github.ref }}"
+         repository: ${{ github.repository }}
+         auto_detect_new_contributors: 'true'
+
+    # -----------------------------------------------------------------------------------------------------------
+    # Create the Release
+    # -----------------------------------------------------------------------------------------------------------
     - name: Create release
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -128,22 +160,21 @@ jobs:
           title="${title/rc/"RC"}"
         else
           # check if this version should not be marked latest
-          prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
-          prevvers=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//")
           vers=${VERSION#"v"}
-          echo "${prevvers},${vers}"
+          echo "Previous,Current version: ${PREVIOUS_VERSION},${vers}"
           # sort -V -C returns 0 if args are ascending version order
-          if !(echo "${prevvers},${vers}" | tr ',' '\n' | sort -V -C)
+          if !(echo "${env.PREVIOUS_VERSION},${vers}" | tr ',' '\n' | sort -V -C)
           then
             LATEST="--latest=false"
           fi
         fi
 
-        echo "TOM: prev,ver: ${prevvers},${vers}"
+        echo "TOM: prev,ver: ${env.PREVIOUS_VERSION},${vers}"
         echo "TOM: title: $title"
         echo "TOM: notes file $VERSION-release-notes.md"
         echo "TOM: RC: $RC"
         echo "TOM: LATEST: $LATEST"
+        echo "TOM: New releasenotes: ${{ steps.changelog.outputs.notes }}"
 
         gh release create $VERSION \
             -t $title \
@@ -151,7 +182,10 @@ jobs:
             --verify-tag \
             $RC \
             $LATEST
-
+            
+# -----------------------------------------------------------------------------------------------------------
+# If requested, let's send an email notification.
+# -----------------------------------------------------------------------------------------------------------
   notification:
     name: Email notification
     runs-on: ubuntu-latest
