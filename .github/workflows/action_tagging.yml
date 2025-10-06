@@ -132,6 +132,12 @@ jobs:
           fi
         fi
 
+        echo "TOM: prev,ver: ${prevvers},${vers}"
+        echo "TOM: title: $title"
+        echo "TOM: notes file $VERSION-release-notes.md"
+        echo "TOM: RC: $RC"
+        echo "TOM: LATEST: $LATEST"
+
         gh release create $VERSION \
             -t $title \
             --notes-file $VERSION-release-notes.md \
