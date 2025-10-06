@@ -16,7 +16,7 @@ on:
           - "true"  # Must be quoted string, boolean value not supported.
           - "false"
       sendmail:
-        description: 'Send Mail to podman@list.podman.io?'
+        description: 'Send Mail to podman@lists.podman.io?'
         default: "false"  # 'choice' type requires string value
         type: choice
         options:
