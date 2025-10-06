@@ -60,7 +60,7 @@ jobs:
         echo "PREVIOUS_VERSION=$prevvers" >> $GITHUB_ENV
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
-        echo "Previous Version: $PREVIOUS_VERSION"
+        echo "Previous Version: ${env.PREVIOUS_VERSION}"
     
     - name: Determine release
       id: buildonly
