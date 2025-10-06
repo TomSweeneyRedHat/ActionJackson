@@ -57,7 +57,7 @@ jobs:
           fi
         prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
         prevvers=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//")
-        echo "PREVIOUS_VERSION=${{ prevvers }}" >> $GITHUB_ENV
+        echo "PREVIOUS_VERSION=$prevvers" >> $GITHUB_ENV
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
         echo "Previous Version: $PREVIOUS_VERSION"
