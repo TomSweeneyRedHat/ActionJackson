@@ -45,19 +45,20 @@ jobs:
           then
             echo "Unable to parse release version '$VERSION' from github event JSON, or workflow 'version' input."
             exit 1
-          fi
+        fi
 
-          if grep -Eq '.+-dev$' <<<"$VERSION"
-          then
-            echo "Refusing to process a "-dev" version '$VERSION'"
-            exit 1
-          fi
+        if grep -Eq '.+-dev$' <<<"$VERSION"
+        then
+          echo "Refusing to process a "-dev" version '$VERSION'"
+          exit 1
+        fi
+        
         prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
-        PRIOR_VERSION=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
+        PRIORVERSION=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "prior_version=$PRIOR_VERSION" >> $GITHUB_OUTPUT
+        echo "priorversion=$PRIORVERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
-        echo "::notice::With Prior Version $PRIOR_VERSION"
+        echo "::notice::With Prior Version $PRIORVERSION"
 
     - name: Determine release
       id: buildonly
@@ -74,7 +75,7 @@ jobs:
         echo "::notice::This will be build-only: $BUILDONLY"
     outputs:
       version: ${{ steps.getversion.outputs.version }}
-      prior_version: ${{ steps.getversion.output.prior_version }}
+      priorversion: ${{ steps.getversion.output.priorversion }}
       buildonly: ${{ steps.buildonly.outputs.buildonly }}
 
 # -----------------------------------------------------------------------------------------------------------
@@ -89,7 +90,7 @@ jobs:
       contents: write
     env:
       VERSION: ${{needs.check.outputs.version}}
-      PRIOR_VERSION: ${{needs.check.outputs.version}}
+      PRIORVERSION: ${{needs.check.outputs.version}}
 
     steps:
     - name: Checkout the main branch of this repository
@@ -103,7 +104,7 @@ jobs:
     - name: TOM cat release notes
       run: cat ${{ github.workspace }}/RELEASE_NOTES.md
     - name: TOM, what is that prior version?
-      run: echo "Version, Prior Version $VERSION, $PRIOR_VERSION"
+      run: echo "Version, Prior Version $VERSION, $PRIORVERSION"
     - name: List local files and directories
       run: |
         echo "Listing contents of the current working directory:"
@@ -143,7 +144,7 @@ jobs:
       uses: gableroux/generate-github-release-notes@v0.1.2
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
-         base_tag: ${{ needs.check.outputs.prior_version }}
+         base_tag: $PRIORVERSION
          head_tag: "${{ github.ref }}"
          repository: ${{ github.repository }}
          auto_detect_new_contributors: 'true'
@@ -164,13 +165,13 @@ jobs:
           vers=${VERSION#"v"}
           echo "Previous,Current version: ${PREVIOUS_VERSION},${vers}"
           # sort -V -C returns 0 if args are ascending version order
-          if !(echo "${needs.check.outputs.prior_version},${vers}" | tr ',' '\n' | sort -V -C)
+          if !(echo "${needs.check.outputs.priorversion},${vers}" | tr ',' '\n' | sort -V -C)
           then
             LATEST="--latest=false"
           fi
         fi
 
-        echo "TOM: prev,ver: ${needs.check.outputs.prior_version},${vers}"
+        echo "TOM: prev,ver: ${needs.check.outputs.priorversion},${vers}"
         echo "TOM: title: $title"
         echo "TOM: notes file $VERSION-release-notes.md"
         echo "TOM: RC: $RC"
