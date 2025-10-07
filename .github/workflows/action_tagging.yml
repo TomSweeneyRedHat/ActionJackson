@@ -75,7 +75,7 @@ jobs:
         echo "::notice::This will be build-only: $BUILDONLY"
     outputs:
       version: ${{ steps.getversion.outputs.version }}
-      priorversion: ${{ steps.getversion.output.priorversion }}
+      priorversion: ${{ steps.getversion.outputs.priorversion }}
       buildonly: ${{ steps.buildonly.outputs.buildonly }}
 
 # -----------------------------------------------------------------------------------------------------------
