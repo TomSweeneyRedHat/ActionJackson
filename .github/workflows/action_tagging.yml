@@ -54,11 +54,9 @@ jobs:
           fi
         prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
         PRIOR_VERSION=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
-
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "prior_version=$PRIOR_VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
-        echo "::notice::With Prior Version $prior_version"
+        echo "::notice::With Prior Version $PRIOR_VERSION"
 
     - name: Determine release
       id: buildonly
