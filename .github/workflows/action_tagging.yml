@@ -27,9 +27,6 @@ on:
 permissions:
   contents: write
 
-env:
-  PREVIOUS_VERSION: ""
-
 jobs:
   check:
     name: Check
@@ -56,7 +53,7 @@ jobs:
             exit 1
           fi
         prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
-        prevver=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
+        previous_version=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
     
@@ -75,7 +72,7 @@ jobs:
         echo "::notice::This will be build-only: $BUILDONLY"
     outputs:
       version: ${{ steps.getversion.outputs.version }}
-      previous_version: ${{ steps.getversion.output.prevvers }}
+      previous_version: ${{ steps.getversion.output.previous_version }}
       buildonly: ${{ steps.buildonly.outputs.buildonly }}
 
 # -----------------------------------------------------------------------------------------------------------
@@ -141,7 +138,7 @@ jobs:
       uses: gableroux/generate-github-release-notes@v0.1.2
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
-         base_tag: ${{ env.PREVIOUS_VERSION }}
+         base_tag: ${{ needs.check.outputs.previous_version }}
          head_tag: "${{ github.ref }}"
          repository: ${{ github.repository }}
          auto_detect_new_contributors: 'true'
@@ -162,13 +159,13 @@ jobs:
           vers=${VERSION#"v"}
           echo "Previous,Current version: ${PREVIOUS_VERSION},${vers}"
           # sort -V -C returns 0 if args are ascending version order
-          if !(echo "${env.PREVIOUS_VERSION},${vers}" | tr ',' '\n' | sort -V -C)
+          if !(echo "${needs.check.outputs.previous_version},${vers}" | tr ',' '\n' | sort -V -C)
           then
             LATEST="--latest=false"
           fi
         fi
 
-        echo "TOM: prev,ver: ${env.PREVIOUS_VERSION},${vers}"
+        echo "TOM: prev,ver: ${needs.check.outputs.previous_version},${vers}"
         echo "TOM: title: $title"
         echo "TOM: notes file $VERSION-release-notes.md"
         echo "TOM: RC: $RC"
