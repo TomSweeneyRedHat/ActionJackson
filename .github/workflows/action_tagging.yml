@@ -99,6 +99,8 @@ jobs:
       run: ls -R ${{ github.workspace }} 
     - name: TOM cat release notes
       run: cat ${{ github.workspace }}/RELEASE_NOTES.md
+    - name: TOM, what is that previous version?
+      run: cat ${{needs.check.outputs.previous_version}}
     - name: List local files and directories
       run: |
         echo "Listing contents of the current working directory:"
