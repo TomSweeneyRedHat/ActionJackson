@@ -56,7 +56,7 @@ jobs:
         previous_version=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
-        echo "::notice::With Prior Verion $prevoius_version"
+        echo "::notice::With Prior Version $previous_version"
 
     - name: Determine release
       id: buildonly
