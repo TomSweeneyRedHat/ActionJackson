@@ -89,7 +89,7 @@ jobs:
       contents: write
     env:
       VERSION: ${{needs.check.outputs.version}}
-      PRIOR_VERSION: ${{needs.check.outputs.prior_version}}
+      PRIOR_VERSION: ${{needs.check.outputs.version}}
 
     steps:
     - name: Checkout the main branch of this repository
