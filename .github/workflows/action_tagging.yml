@@ -56,7 +56,8 @@ jobs:
         previous_version=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//") >> $GITHUB_OUTPUT
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
-    
+        echo "::notice::With Prior Verion $prevoius_version"
+
     - name: Determine release
       id: buildonly
       run: |
@@ -100,7 +101,7 @@ jobs:
     - name: TOM cat release notes
       run: cat ${{ github.workspace }}/RELEASE_NOTES.md
     - name: TOM, what is that previous version?
-      run: cat ${{needs.check.outputs.previous_version}}
+      run: echo "Previous Version ${{needs.check.outputs.previous_version}}"
     - name: List local files and directories
       run: |
         echo "Listing contents of the current working directory:"
