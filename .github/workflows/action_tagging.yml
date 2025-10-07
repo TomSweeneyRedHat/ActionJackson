@@ -103,7 +103,7 @@ jobs:
     - name: TOM cat release notes
       run: cat ${{ github.workspace }}/RELEASE_NOTES.md
     - name: TOM, what is that prior version?
-      run: echo "Prior Version $PRIOR_VERSION"
+      run: echo "Version, Prior Version $VERSION, $PRIOR_VERSION"
     - name: List local files and directories
       run: |
         echo "Listing contents of the current working directory:"
