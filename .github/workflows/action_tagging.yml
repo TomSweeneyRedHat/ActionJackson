@@ -53,11 +53,12 @@ jobs:
             exit 1
           fi
         prevrelease=$(curl --retry 3 --silent -m 10 --connect-timeout 5 "https://api.github.com/repos/${{ github.repository }}/releases/latest")
-        previous_version=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//")
+        prevers=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -e "s/^v//")
+
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "previous_version=$previous_version" >> $GITHUB_OUTPUT
+        echo "prior_version=$prevers" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
-        echo "::notice::With Prior Version $previous_version"
+        echo "::notice::With Prior Version $prior_version"
 
     - name: Determine release
       id: buildonly
@@ -74,7 +75,7 @@ jobs:
         echo "::notice::This will be build-only: $BUILDONLY"
     outputs:
       version: ${{ steps.getversion.outputs.version }}
-      previous_version: ${{ steps.getversion.output.previous_version }}
+      prior_version: ${{ steps.getversion.output.prior_version }}
       buildonly: ${{ steps.buildonly.outputs.buildonly }}
 
 # -----------------------------------------------------------------------------------------------------------
@@ -89,7 +90,8 @@ jobs:
       contents: write
     env:
       VERSION: ${{needs.check.outputs.version}}
-      
+      PRIOR_VERSION: ${{needs.check.outputs.prior_version}}
+
     steps:
     - name: Checkout the main branch of this repository
       uses: actions/checkout@v5
@@ -101,8 +103,8 @@ jobs:
       run: ls -R ${{ github.workspace }} 
     - name: TOM cat release notes
       run: cat ${{ github.workspace }}/RELEASE_NOTES.md
-    - name: TOM, what is that previous version?
-      run: echo "Previous Version ${{needs.check.outputs.previous_version}}"
+    - name: TOM, what is that prior version?
+      run: echo "Prior Version $PRIOR_VERSION"
     - name: List local files and directories
       run: |
         echo "Listing contents of the current working directory:"
@@ -142,7 +144,7 @@ jobs:
       uses: gableroux/generate-github-release-notes@v0.1.2
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
-         base_tag: ${{ needs.check.outputs.previous_version }}
+         base_tag: ${{ needs.check.outputs.prior_version }}
          head_tag: "${{ github.ref }}"
          repository: ${{ github.repository }}
          auto_detect_new_contributors: 'true'
@@ -163,13 +165,13 @@ jobs:
           vers=${VERSION#"v"}
           echo "Previous,Current version: ${PREVIOUS_VERSION},${vers}"
           # sort -V -C returns 0 if args are ascending version order
-          if !(echo "${needs.check.outputs.previous_version},${vers}" | tr ',' '\n' | sort -V -C)
+          if !(echo "${needs.check.outputs.prior_version},${vers}" | tr ',' '\n' | sort -V -C)
           then
             LATEST="--latest=false"
           fi
         fi
 
-        echo "TOM: prev,ver: ${needs.check.outputs.previous_version},${vers}"
+        echo "TOM: prev,ver: ${needs.check.outputs.prior_version},${vers}"
         echo "TOM: title: $title"
         echo "TOM: notes file $VERSION-release-notes.md"
         echo "TOM: RC: $RC"
