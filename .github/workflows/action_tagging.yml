@@ -57,6 +57,7 @@ jobs:
         PRIORVERSION=$(echo "$prevrelease" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') >> $GITHUB_OUTPUT
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "priorversion=$PRIORVERSION" >> $GITHUB_OUTPUT
+        echo "head_tag: ${{ github.ref }}"
         echo "::notice::Building $VERSION"
         echo "::notice::With Prior Version $PRIORVERSION"
 
