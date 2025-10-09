@@ -144,8 +144,8 @@ jobs:
       uses: gableroux/generate-github-release-notes@v0.1.2
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
-         base_tag: $PRIORVERSION
-         head_tag: $VERSION
+         base_tag: $VERSION
+         head_tag: $PRIORVERSION
          repository: ${{ github.repository }}
          auto_detect_new_contributors: 'true'
 
