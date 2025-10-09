@@ -135,7 +135,11 @@ jobs:
         fi
     - name: Display release notes
       run: cat $VERSION-release-notes.md
-
+    - name: Display github.event.release.tag_name
+      run: |
+         echo "base tag release.tag_name ${{ github.event.release.tag_name }}"
+         echo "head tag github.sha ${{ github.sha }}"
+      
     # -----------------------------------------------------------------------------------------------------------
     # Create the Changelog
     # -----------------------------------------------------------------------------------------------------------
