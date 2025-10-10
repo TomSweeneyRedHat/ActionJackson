@@ -145,6 +145,8 @@ jobs:
     # -----------------------------------------------------------------------------------------------------------
     - name: Conventional Changelog Action
       id: changelog 
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: gableroux/generate-github-release-notes@v0.1.2
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -189,7 +191,7 @@ jobs:
             --verify-tag \
             $RC \
             $LATEST
-            
+       
 # -----------------------------------------------------------------------------------------------------------
 # If requested, let's send an email notification.
 # -----------------------------------------------------------------------------------------------------------
