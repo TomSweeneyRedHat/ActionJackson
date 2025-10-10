@@ -15,6 +15,13 @@ on:
         options:
           - "true"  # Must be quoted string, boolean value not supported.
           - "false"
+      makereleasenote:
+        description: 'Generate Release Note or pull from RELEASE_NOTES.md?'
+        default: "generate"  # 'choice' type requires string value
+        type: choice
+        options:
+          - "generate"
+          - "pull"
       sendmail:
         description: 'Send Mail to podman@lists.podman.io?'
         default: "false"  # 'choice' type requires string value
@@ -114,6 +121,7 @@ jobs:
       with:
         ref: ${{needs.check.outputs.version}}
     - name: Get release notes
+      if: inputs.makereleasenote == 'pull'
       run: |
         ver="$(echo "$VERSION" | sed -e "s/^v//" -e "s/-rc.*//")"
         echo "ver [${ver}]"
@@ -148,6 +156,7 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: gableroux/generate-github-release-notes@v0.1.2
+      if: inputs.makereleasenote == 'generate'
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          base_tag: ${{ needs.check.outputs.priorversion }}
@@ -186,6 +195,14 @@ jobs:
         echo "TOM: Generated releasenotes: ${{ steps.changelog.outputs.notes }}"
         echo "TOM: From file release notes: "
         cat $VERSION-release-notes.md
+        $releasenotes = cat $VERSION-release-notes.md
+        
+        if [[ inputs.makereleasenote == 'generate' ]]
+            $releasenotes = ${{ steps.changelog.outputs.notes }}
+        fi
+
+        echo "TOM: Final Release Notes: "
+        echo "$releasenotes"
         
         gh release create $VERSION \
             -t $title \
@@ -229,7 +246,7 @@ jobs:
           gh release view $VERSION \
             --repo ${{ github.repository }} --json=body --jq '.body' >> email_body.txt
 
-      # If job fails, permit operator to observe contents in case helpful.
+      # If the job fails, permit the operator to observe the contents if helpful.
       - name: Provide release e-mail contents for examination
         run: cat email_body.txt
       - name: Send release notification e-mail
