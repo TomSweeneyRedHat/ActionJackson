@@ -150,7 +150,7 @@ jobs:
       uses: gableroux/generate-github-release-notes@v0.1.2
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
-         base_tag: ${{ github.event.release.tag_name }}
+         base_tag: $VERSION
          head_tag: ${{ github.sha }}
          repository: ${{ github.repository }}
          auto_detect_new_contributors: 'true'
