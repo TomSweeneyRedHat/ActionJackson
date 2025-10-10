@@ -183,8 +183,10 @@ jobs:
         echo "TOM: notes file $VERSION-release-notes.md"
         echo "TOM: RC: $RC"
         echo "TOM: LATEST: $LATEST"
-        echo "TOM: New releasenotes: ${{ steps.changelog.outputs.notes }}"
-
+        echo "TOM: Generated releasenotes: ${{ steps.changelog.outputs.notes }}"
+        echo "TOM: From file release notes: "
+        cat $VERSION-release-notes.md
+        
         gh release create $VERSION \
             -t $title \
             --notes-file $VERSION-release-notes.md \
