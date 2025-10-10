@@ -196,10 +196,9 @@ jobs:
         echo "TOM: Generated releasenotes: ${{ steps.changelog.outputs.notes }}"
         echo "TOM: From file release notes: "
         cat $VERSION-release-notes.md
-        $releasenotes=$(cat $VERSION-release-notes.md)
-        
+    
         if [[ inputs.makereleasenote == 'generate' ]]
-            $releasenotes=${{ steps.changelog.outputs.notes }}
+            echo "${{ steps.changelog.outputs.notes }}" > $VERSION-release-notes.md
         fi
 
         echo "TOM: Final Release Notes: "
