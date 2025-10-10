@@ -120,6 +120,9 @@ jobs:
       uses: actions/checkout@v5
       with:
         ref: ${{needs.check.outputs.version}}
+    - name: Touch release notes file
+      run: |
+        touch $VERSION-release-notes.md
     - name: Get release notes
       if: inputs.makereleasenote == 'pull'
       run: |
