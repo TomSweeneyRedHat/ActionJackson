@@ -35,9 +35,6 @@ on:
 permissions:
   contents: write
 
-env:
-  PROJECT_NAME: "container-libs"
-
 # -----------------------------------------------------------------------------------------------------------
 # Get the version of the tag from input or from a push of it.
 # Then figure out the prior version of the project.
@@ -73,7 +70,7 @@ jobs:
         echo "priorversion=$PRIORVERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
         echo "::notice::With Prior Version $PRIORVERSION"
-        echo "::noitce::For the project ${{ github.event.repository.name }}"
+        echo "::notice::For the project ${{ github.event.repository.name }}"
 
     - name: Determine release
       id: buildonly
@@ -135,7 +132,7 @@ jobs:
               echo "::notice:: Release does not have release notes already created."
               exit 1
           else
-          echo "This is a release candidate of ${{ env.PROJECT_NAME }} v$ver. Full release notes will be available with a later RC." > $releasenotes
+          echo "This is a release candidate of ${{ github.event.repository.name }} v$ver. Full release notes will be available with a later RC." > $releasenotes
           fi
         fi
 
@@ -217,7 +214,7 @@ jobs:
             RC_PREFIX="candidate "
           fi
 
-          echo "mail_subj=${{ env.PROJECT_NAME }} ${RC_PREFIX}${VERSION} Released" >> $GITHUB_OUTPUT
+          echo "mail_subj=${{ github.event.repository.name }} ${RC_PREFIX}${VERSION} Released" >> $GITHUB_OUTPUT
 
           cat <<EOF>email_body.txt
           Hi all,
