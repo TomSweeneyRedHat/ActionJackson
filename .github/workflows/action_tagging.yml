@@ -196,7 +196,7 @@ jobs:
             $LATEST
        
 # -----------------------------------------------------------------------------------------------------------
-# If requested, let's send an email notification.
+# If requested, let's send an email notification if we're creating the release.
 # -----------------------------------------------------------------------------------------------------------
   notification:
     name: Email notification
