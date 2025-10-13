@@ -174,7 +174,9 @@ jobs:
           # check if this version should not be marked latest
           vers=${VERSION#"v"}
           priorversion=${PRIORVERSION#"v"}
-          echo "Prior version,Current version: ${priorversion},${vers}"
+          echo "::notice::With Prior Version ${priorversion}"
+          echo "::notice::With New Version ${vers}"
+
           # sort -V -C returns 0 if args are ascending version order
           if !(echo "${priorvers},${vers}" | tr ',' '\n' | sort -V -C)
           then
