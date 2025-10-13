@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - '*'
+      
   workflow_dispatch:
     inputs:
       version:
@@ -34,6 +35,13 @@ on:
 permissions:
   contents: write
 
+env:
+  PROJECT_NAME: "container-libs"
+
+# -----------------------------------------------------------------------------------------------------------
+# Get the version of the tag from input or from a push of it.
+# Then figure out the prior version of the project.
+# -----------------------------------------------------------------------------------------------------------
 jobs:
   check:
     name: Check
@@ -103,52 +111,37 @@ jobs:
       uses: actions/checkout@v5
       with:
         ref: ${{needs.check.outputs.version}}
-    - name: TOM Where Are We?
-      run: pwd
-    - name: TOM List Files in Repository
-      run: ls -R ${{ github.workspace }} 
-    - name: TOM cat release notes
-      run: cat ${{ github.workspace }}/RELEASE_NOTES.md
-    - name: TOM, what is that prior version?
-      run: echo "Version, Prior Version $VERSION, $PRIORVERSION"
-    - name: List local files and directories
-      run: |
-        echo "Listing contents of the current working directory:"
-        ls -la ..
+
     - name: Checkout Version
       uses: actions/checkout@v5
       with:
         ref: ${{needs.check.outputs.version}}
+
     - name: Touch release notes file
       run: |
         touch $VERSION-release-notes.md
-    - name: Get release notes
+    
+    - name: Get release notes from file if requested
       if: inputs.makereleasenote == 'pull'
       run: |
         ver="$(echo "$VERSION" | sed -e "s/^v//" -e "s/-rc.*//")"
         echo "ver [${ver}]"
-        echo "TOM: do the directory thing!"
         ls -R ${{ github.workspace }}
         releasenotes="$VERSION-release-notes.md"
-        echo "Release Notes1 [${releasenotes}]"
         awk -v ver=$ver '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p' ${{ github.workspace }}/RELEASE_NOTES.md > $releasenotes
-        echo "Release Notes2 [${releasenotes}]"
         if [[ -z $(grep '[^[:space:]]' $releasenotes) ]]; then
-          echo "Release Notes3 [${releasenotes}]"
           if [[ $VERSION != *-rc* ]]; then
-              echo "Release Notes4 [${releasenotes}]"
-              echo "::notice:: Release does not have release notes"
+              echo "::notice:: Release does not have release notes already created."
               exit 1
           else
-          echo "This is a release candidate of container-libs v$ver. Full release notes will be available with a later RC." > $releasenotes
+          echo "This is a release candidate of ${{ env.PROJECT_NAME }} v$ver. Full release notes will be available with a later RC." > $releasenotes
           fi
         fi
-    - name: Display release notes
-      run: cat $VERSION-release-notes.md
+
     - name: Display github.event.release.tag_name
       run: |
-         echo "base tag release.tag_name ${{ github.event.release.tag_name }}"
-         echo "head tag github.sha ${{ github.sha }}"
+         echo "::notice::base tag release.tag_name ${{ github.event.release.tag_name }}"
+         echo "::notice::head tag github.sha ${{ github.sha }}"
       
     # -----------------------------------------------------------------------------------------------------------
     # Create the Changelog
@@ -189,23 +182,15 @@ jobs:
           fi
         fi
 
-        echo "TOM: prior,ver: ${priorversion},${vers}"
-        echo "TOM: title: $title"
-        echo "TOM: notes file $VERSION-release-notes.md"
-        echo "TOM: Generated releasenotes: ${{ steps.changelog.outputs.notes }}"
-        echo "TOM: From file release notes: "
-        cat $VERSION-release-notes.md
- 
+        # If we're generating the release notes, put the generated ones in the file.
+        releasenotes="$VERSION-release-notes.md"
         if [[ ${{ inputs.makereleasenote }} == 'generate' ]]; then
-            echo "${{ steps.changelog.outputs.notes }}" > $VERSION-release-notes.md
+            echo "${{ steps.changelog.outputs.notes }}" > $releasenotes
         fi
-
-        echo "TOM: Final Release Notes: "
-        echo "$releasenotes"
         
         gh release create $VERSION \
             -t $title \
-            --notes-file $VERSION-release-notes.md \
+            --notes-file $releasenotes \
             --verify-tag \
             $RC \
             $LATEST
@@ -229,7 +214,7 @@ jobs:
             RC_PREFIX="candidate "
           fi
 
-          echo "mail_subj=container-libs ${RC_PREFIX}${VERSION} Released" >> $GITHUB_OUTPUT
+          echo "mail_subj=${{ env.PROJECT_NAME }} ${RC_PREFIX}${VERSION} Released" >> $GITHUB_OUTPUT
 
           cat <<EOF>email_body.txt
           Hi all,
