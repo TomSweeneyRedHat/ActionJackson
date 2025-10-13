@@ -84,7 +84,7 @@ jobs:
           BUILDONLY=${{ inputs.buildonly }}
         fi
         echo "buildonly=$BUILDONLY" >> $GITHUB_OUTPUT
-        echo "::notice::This will be build-only: $BUILDONLY"
+
     outputs:
       version: ${{ steps.getversion.outputs.version }}
       priorversion: ${{ steps.getversion.outputs.priorversion }}
