@@ -73,6 +73,7 @@ jobs:
         echo "priorversion=$PRIORVERSION" >> $GITHUB_OUTPUT
         echo "::notice::Building $VERSION"
         echo "::notice::With Prior Version $PRIORVERSION"
+        echo "::noitce::For the project ${{ github.event.repository.name }}"
 
     - name: Determine release
       id: buildonly
