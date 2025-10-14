@@ -86,7 +86,7 @@ jobs:
         # this case in a readable/maintainable way.
         if [[ -z "${{ inputs.buildonly }}" ]]
         then
-          BUILDONLY=false
+          BUILDONLY="false"
         else
           BUILDONLY=${{ inputs.buildonly }}
         fi
@@ -99,7 +99,7 @@ jobs:
         # this case in a readable/maintainable way.
         if [[ -z "${{ inputs.makereleasenote }}" ]]
         then
-          MAKERELEASENOTE=generate
+          MAKERELEASENOTE="generate"
         else
           MAKERELEASENOTE=${{ inputs.makereleasenote }}
         fi
@@ -116,7 +116,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    if: needs.check.outputs.buildonly == 'false'
+    if: needs.check.outputs.buildonly == "false"
     needs: [check]
     permissions:
       contents: write
@@ -140,7 +140,7 @@ jobs:
         touch $VERSION-release-notes.md
     
     - name: Get release notes from file if requested
-      if: inputs.makereleasenote == 'pull'
+      if: needs.check.outputs.makereleasenote == "pull"
       run: |
         ver="$(echo "$VERSION" | sed -e "s/^v//" -e "s/-rc.*//")"
         echo "ver [${ver}]"
@@ -164,7 +164,7 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: gableroux/generate-github-release-notes@v0.1.2
-      if: inputs.makereleasenote == 'generate'
+      if: needs.check.outputs.makereleasenote == "generate"
       with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
          base_tag: ${{ needs.check.outputs.priorversion }}
@@ -199,7 +199,7 @@ jobs:
 
         # If we're generating the release notes, put the generated ones in the file.
         releasenotes="$VERSION-release-notes.md"
-        if [[ ${{ inputs.makereleasenote }} == 'generate' ]]; then
+        if [[ ${{ needs.check.outputs..makereleasenote }} == "generate" ]]; then
             echo "${{ steps.changelog.outputs.notes }}" > $releasenotes
         fi
         
@@ -217,7 +217,7 @@ jobs:
     name: Email notification
     runs-on: ubuntu-latest
     needs: [check, release]
-    if: needs.check.outputs.buildonly == 'false' && inputs.sendmail == 'true'
+    if: needs.check.outputs.buildonly == "false" && inputs.sendmail == "true"
     steps:
       - name: Format release email
         id: format
