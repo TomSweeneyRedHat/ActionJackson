@@ -92,7 +92,7 @@ jobs:
         fi
         echo "buildonly=$BUILDONLY" >> $GITHUB_OUTPUT
         
-    - name: Just check, or build the release?
+    - name: Generate the Release Notes?
       id: makereleasenote
       run: |
         # The 'tag' trigger will not have a 'makereleasenote' input set. Handle
