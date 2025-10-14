@@ -79,7 +79,7 @@ jobs:
         echo "::notice::With Prior Version $PRIORVERSION"
         echo "::notice::For the project ${{ github.event.repository.name }}"
 
-    - name: Determine release
+    - name: Just check, or build the release?
       id: buildonly
       run: |
         # The 'tag' trigger will not have a 'buildonly' input set. Handle
@@ -91,11 +91,24 @@ jobs:
           BUILDONLY=${{ inputs.buildonly }}
         fi
         echo "buildonly=$BUILDONLY" >> $GITHUB_OUTPUT
-
+        
+    - name: Just check, or build the release?
+      id: makereleasenote
+      run: |
+        # The 'tag' trigger will not have a 'makereleasenote' input set. Handle
+        # this case in a readable/maintainable way.
+        if [[ -z "${{ inputs.makereleasenote }}" ]]
+        then
+          MAKERELEASENOTE=generate
+        else
+          MAKERELEASENOTE=${{ inputs.makereleasenote }}
+        fi
+        echo "makereleasenote=$MAKERELEASENOTE" >> $GITHUB_OUTPUT
     outputs:
       version: ${{ steps.getversion.outputs.version }}
       priorversion: ${{ steps.getversion.outputs.priorversion }}
       buildonly: ${{ steps.buildonly.outputs.buildonly }}
+      makereleasenote: ${{ steps.makereleasenote.outputs.makereleasenote }}
 
 # -----------------------------------------------------------------------------------------------------------
 # Start the release process
