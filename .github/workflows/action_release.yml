@@ -199,7 +199,7 @@ jobs:
 
         # If we're generating the release notes, put the generated ones in the file.
         releasenotes="$VERSION-release-notes.md"
-        if [[ ${{ needs.check.outputs..makereleasenote }} == "generate" ]]; then
+        if [[ ${{ needs.check.outputs.makereleasenote }} == "generate" ]]; then
             echo "${{ steps.changelog.outputs.notes }}" > $releasenotes
         fi
         
