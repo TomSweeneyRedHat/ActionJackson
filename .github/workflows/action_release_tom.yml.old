@@ -38,7 +38,10 @@ jobs:
           pattern: '^v.*'
           # Including pre-release
           prerelease: true
-          
+
+      - name: Poke inside
+        run: echo " base,ref ${{ steps.currentrelease.outputs.tag_name }},${{ github.ref }}"
+        
       # -----------------------------------------------------------------------------------------------------------
       # Create the Changelog
       # -----------------------------------------------------------------------------------------------------------
