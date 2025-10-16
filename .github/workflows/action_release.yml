@@ -202,7 +202,10 @@ jobs:
         if [[ ${{ needs.check.outputs.makereleasenote }} == 'generate' ]]; then
             echo "${{ steps.changelog.outputs.notes }}" > $releasenotes
         fi
+
 # -----------------------------------------------------------------------------------------------------------
+# This makes no sense, but????
+#
 #        gh release create $VERSION \
 #            -t $title \
 #            --notes-file $releasenotes \
