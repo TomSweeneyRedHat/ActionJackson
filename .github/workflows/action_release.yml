@@ -203,17 +203,13 @@ jobs:
             echo "${{ steps.changelog.outputs.notes }}" > $releasenotes
         fi
 
-# -----------------------------------------------------------------------------------------------------------
-# This makes no sense, but????
-#
-#        gh release create $VERSION \
-#            -t $title \
-#            --notes-file $releasenotes \
-#            --verify-tag \
-#            $RC \
-#            $LATEST
-# -----------------------------------------------------------------------------------------------------------
-       
+        gh release create $VERSION \
+            -t $title \
+            --notes-file $releasenotes \
+            --verify-tag \
+            $RC \
+            $LATEST
+
 # -----------------------------------------------------------------------------------------------------------
 # If requested, let's send an email notification if we're creating the release.
 # -----------------------------------------------------------------------------------------------------------
